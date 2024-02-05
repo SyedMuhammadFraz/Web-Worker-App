@@ -1,0 +1,140 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Workers Example</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        margin: 20px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      button {
+        padding: 10px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #resultContainer {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+      }
+
+      #resultWithWorkers,
+      #resultWithoutWorkers,
+      #resultPrintHi {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web Workers Example</h1>
+
+    <button onclick="executeComplexCodeWithWorkers()">
+      Execute Complex Code with Web Workers
+    </button>
+    <button onclick="executeComplexCodeWithoutWorkers()">
+      Execute Complex Code without Web Workers
+    </button>
+    <button onclick="printHi()">Print Hi without Complex Code</button>
+
+    <!-- Display results on the HTML page -->
+    <div id="resultWithWorkers"></div>
+    <div id="resultWithoutWorkers"></div>
+    <div id="resultPrintHi"></div>
+
+    <script>
+      // Function to execute complex code with Web Workers
+      function executeComplexCodeWithWorkers() {
+        const resultContainer = document.getElementById("resultWithWorkers");
+        resultContainer.innerHTML =
+          "Executing complex code with Web Workers...";
+
+        const worker = new Worker("complex-code-worker.js");
+
+        const startTime = performance.now();
+
+        // Message event listener to receive the result from the worker
+        worker.onmessage = function (event) {
+          const result = event.data;
+          const endTime = performance.now();
+
+          // Display result and time taken on the HTML page
+          resultContainer.innerHTML = `
+          <p>Complex code result with Web Workers: ${result}</p>
+          <p>Time taken with Web Workers: ${
+            endTime - startTime
+          } milliseconds</p>
+        `;
+        };
+
+        // Start the worker
+        worker.postMessage("start");
+      }
+
+      // Function to execute complex code without Web Workers
+      function executeComplexCodeWithoutWorkers() {
+        const resultContainer = document.getElementById("resultWithoutWorkers");
+        resultContainer.innerHTML =
+          "Executing complex code without Web Workers...";
+
+        const startTime = performance.now();
+
+        // Simulate complex calculation without Web Workers
+        // Add your complex code here
+
+        const result = simulateComplexCalculation();
+
+        const endTime = performance.now();
+
+        // Display result and time taken on the HTML page
+        resultContainer.innerHTML = `
+        <p>Complex code result without Web Workers: ${result}</p>
+        <p>Time taken without Web Workers: ${
+          endTime - startTime
+        } milliseconds</p>
+      `;
+      }
+
+      // Function to simulate a complex calculation (replace this with your actual code)
+      function simulateComplexCalculation() {
+        // Simulating a time-consuming calculation
+        let result = 0;
+        for (let i = 0; i < 1000000000; i++) {
+          result += Math.sqrt(i);
+          result -= Math.sqrt(i);
+        }
+        return result;
+      }
+
+      // Function to print "Hi"
+      function printHi() {
+        const resultContainer = document.getElementById("resultPrintHi");
+        resultContainer.innerHTML += "<p>Completing web workers assignment</p>";
+      }
+    </script>
+  </body>
+</html>
